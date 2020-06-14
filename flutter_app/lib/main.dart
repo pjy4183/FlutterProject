@@ -123,7 +123,7 @@ class _MyApp2State extends State<MyApp2> {
     );
   }
 
-  _pressedStar(){
+  void _pressedStar(){
     setState(() {
       if (_isStar){
         _isStar = false;
