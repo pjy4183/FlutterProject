@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:memomemo/database/memo.dart';
 import 'package:memomemo/database/db.dart';
-import 'package:crypto/crypto.dart'; 
+import 'package:crypto/crypto.dart';
 import 'dart:convert';
 
 class EditPage extends StatelessWidget {
