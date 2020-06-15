@@ -22,8 +22,8 @@ class _MyHomePageState extends State<MyHomePage> {
             padding: EdgeInsets.only(left: 5, top: 30, bottom: 20),
             child: Container(
               child: Text('Memomemo',
-                style: TextStyle(fontSize: 36, color: Colors.blue)),
-                alignment: Alignment.centerLeft,
+                  style: TextStyle(fontSize: 36, color: Colors.blue)),
+              alignment: Alignment.centerLeft,
             ),
           ),
           Expanded(child: memoBuilder()),
@@ -33,7 +33,13 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Navigator.push(
-              context, CupertinoPageRoute(builder: (context) => EditPage()));
+              context, 
+              CupertinoPageRoute(
+                builder: (context) => EditPage(),
+                ),
+                ).then((value){
+                  setState(() {});
+                });
         },
         tooltip: 'Click if you need to add memo',
         label: Text('Add Memo'),
@@ -56,37 +62,64 @@ class _MyHomePageState extends State<MyHomePage> {
     return await sd.memos();
   }
 
-  Widget memoBuilder(){
+  Widget memoBuilder() {
     return FutureBuilder(
-      builder: (context, projectSnap){
-        if (projectSnap.data.isEmpty) {
-            return Container(
-              alignment: Alignment.center,
-              child: Text('Click "Add Memo" to \ntry to write a note!\n\n\n\n\n\n', 
-                style: TextStyle(fontSize: 18, color: Colors.blueGrey),
-                textAlign: TextAlign.center,),);
+      builder: (context, projectSnap) {
+        if (projectSnap.data == null) {
+          return Container(
+            alignment: Alignment.center,
+            child: Text(
+              'Click "Add Memo" to \ntry to write a note!\n\n\n\n\n\n',
+              style: TextStyle(fontSize: 18, color: Colors.blueAccent),
+              textAlign: TextAlign.center,
+            ),
+          );
         }
         return ListView.builder(
+          physics: BouncingScrollPhysics(),
           itemCount: projectSnap.data.length,
           itemBuilder: (context, index) {
             Memo memo = projectSnap.data[index];
             return Container(
+              margin: EdgeInsets.all(5),
+              padding:  EdgeInsets.all(15),
+              alignment: Alignment.center,
+              height: 100,
               child: Column(
-              children: <Widget>[
-                Text(memo.title),
-                Text(memo.text),
-                Text(memo.createTime)
-              ],
-            ),
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Text(memo.title,
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.w500)),
+                      Text(memo.text, style: TextStyle(fontSize: 15)),
+                    ],
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Text("Last Edited Time: " + memo.editTime.split('.')[0],
+                          style: TextStyle(fontSize: 11),
+                          textAlign: TextAlign.end,
+                      ),
+                    ],
+                  )
+                ],
+              ),
               decoration: BoxDecoration(
                 color: Colors.white,
                 border: Border.all(
                   color: Colors.blue,
-                  width: 8,
+                  width: 1,
                 ),
                 borderRadius: BorderRadius.circular(12),
+                boxShadow: [BoxShadow(color: Colors.lightBlue, blurRadius: 3)],
               ),
-              
             );
           },
         );
