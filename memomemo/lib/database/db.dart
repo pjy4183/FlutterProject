@@ -8,10 +8,9 @@ class DBHelper {
   var _db;
 
   Future<Database> get database async {
-    if(_db != null) return _db;
+    if (_db != null) return _db;
     _db = openDatabase(
       join(await getDatabasesPath(), 'memos.db'),
-
       onCreate: (db, version) {
         return db.execute(
           "CREATE TABLE memos(id TEXT PRIMARY KEY, title TEXT, text TEXT, createTime TEXT, editTime TEXT)",
@@ -37,14 +36,13 @@ class DBHelper {
 
     final List<Map<String, dynamic>> maps = await db.query('memos');
 
-    return List.generate(maps.length, (i){
+    return List.generate(maps.length, (i) {
       return Memo(
-        id: maps[i]['id'],
-        title: maps[i]['title'],
-        text: maps[i]['text'],
-        createTime: maps[i]['createTime'],
-        editTime: maps[i]['editTime']
-      );
+          id: maps[i]['id'],
+          title: maps[i]['title'],
+          text: maps[i]['text'],
+          createTime: maps[i]['createTime'],
+          editTime: maps[i]['editTime']);
     });
   }
 
@@ -59,7 +57,7 @@ class DBHelper {
     );
   }
 
-  Future<void> deleteMemo(int id) async {
+  Future<void> deleteMemo(String id) async {
     final db = await database;
 
     await db.delete(
@@ -67,5 +65,20 @@ class DBHelper {
       where: "id = ?",
       whereArgs: [id],
     );
+  }
+
+  Future<List<Memo>> findMemo(String id) async {
+    final db = await database;
+
+    final List<Map<String, dynamic>> maps = await db.query('memos', where: 'id= ?', whereArgs: [id]);
+
+    return List.generate(maps.length, (i) {
+      return Memo(
+          id: maps[i]['id'],
+          title: maps[i]['title'],
+          text: maps[i]['text'],
+          createTime: maps[i]['createTime'],
+          editTime: maps[i]['editTime']);
+    });
   }
 }
