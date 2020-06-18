@@ -18,12 +18,13 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Column(
         children: <Widget>[
           Padding(
             padding: EdgeInsets.only(left: 5, top: 30, bottom: 20),
             child: Container(
-              child: Text('MemoChild',
+              child: Text('MemoWithU',
                   style: TextStyle(fontSize: 36, color: Colors.blue)),
               alignment: Alignment.centerLeft,
             ),

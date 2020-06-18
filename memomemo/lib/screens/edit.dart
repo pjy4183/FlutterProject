@@ -14,7 +14,7 @@ class EditPage extends StatefulWidget {
 
 class _EditPageState extends State<EditPage> {
   BuildContext _context;
-
+  
   String title = '';
   String text = '';
   String createTime = '';
@@ -41,7 +41,9 @@ class _EditPageState extends State<EditPage> {
   }
 
   loadBuilder() {
+    
     return FutureBuilder<List<Memo>>(
+      
       future: loadMemo(widget.id),
       builder: (BuildContext context, AsyncSnapshot<List<Memo>> snapshot) {
         if (snapshot.data == null || snapshot.data == []) {
@@ -55,11 +57,12 @@ class _EditPageState extends State<EditPage> {
 
           var tecText = TextEditingController();
           text = memo.text;
-          tecText.text = title;
+          tecText.text = text;
 
           createTime = memo.createTime;
 
           return Column(
+            
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               TextField(
@@ -105,12 +108,12 @@ class _EditPageState extends State<EditPage> {
       createTime: this.createTime,
       editTime: DateTime.now().toString(),
     );
-    setState(() {
+     setState(() {
       sd.updateMemo(fido);
       Navigator.pop(_context);
     });
-    
-    Navigator.push(context,
-        CupertinoPageRoute(builder: (context) => MyHomePage()));
+     Navigator.push(context,
+        CupertinoPageRoute(builder: (_context) => MyHomePage()));
+   
   }
 }

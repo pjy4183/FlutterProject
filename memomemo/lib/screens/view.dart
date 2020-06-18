@@ -22,6 +22,7 @@ class _ViewPageState extends State<ViewPage> {
   Widget build(BuildContext context) {
     _context = context;
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           actions: <Widget>[
             IconButton(

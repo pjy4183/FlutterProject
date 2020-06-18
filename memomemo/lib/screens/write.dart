@@ -37,7 +37,7 @@ class WritePage extends StatelessWidget {
               TextField(
                 onChanged: (String text){ this.text = text;},
                 keyboardType: TextInputType.multiline,
-                maxLines: 8,
+                maxLines: null,
                 decoration: InputDecoration(hintText: 'Contents'),
               )
             ],
