@@ -10,8 +10,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  int temperature = 0;
-  String location = 'Seoul';
+  int temperature = 28;
+  String location = 'Las Vegas';
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
