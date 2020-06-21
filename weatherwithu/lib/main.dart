@@ -10,7 +10,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  int temperature = 28;
+  int temperature = 30;
   String location = 'Las Vegas';
   @override
   Widget build(BuildContext context) {
