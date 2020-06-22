@@ -32,7 +32,7 @@ class _MyAppState extends State<MyApp> {
                 children: <Widget>[
                   Center(
                     child: Text(
-                      temperature.toString() + '°C',
+                      temperature.toString() + '°Celcius',
                       style: TextStyle(color: Colors.white, fontSize: 60),
                     ),
                   ),
