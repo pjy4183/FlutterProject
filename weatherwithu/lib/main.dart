@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:io';
 
 void main() {
   runApp(MyApp());
@@ -12,26 +13,37 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-<<<<<<< HEAD
-  int temperature = 30;
-  String location = 'Las Vegas';
-=======
-  int temperature = 0;
+  int temperature;
   String location = 'San Fransisco';
   int woeid = 2487956;
   String status = 'clear';
+  String icon = 'c';
+  String errorMessage ='';
 
   String searchURL = 'https://www.metaweather.com/api/location/search/?query=';
   String locationURL = 'https://www.metaweather.com/api/location/';
 
-  void fetchSearch( String input) async {
-    var searchResult = await http.get(searchURL + input);
-    var result = json.decode(searchResult.body)[0];
+  initState() {
+    super.initState();
+    fetchLocation();
+  }
 
-    setState(() {
-      location = result['title'];
-      woeid = result['woeid'];
-    });
+  void fetchSearch( String input) async {
+    try{
+      var searchResult = await http.get(searchURL + input);
+      var result = json.decode(searchResult.body)[0];
+
+      setState(() {
+        location = result['title'];
+        woeid = result['woeid'];
+        errorMessage ='';
+      });
+    }
+    catch(error){
+      setState(() {
+        errorMessage = "Sorry, cannot find the city...";
+      });
+    }
   }
 
   void fetchLocation() async {
@@ -42,16 +54,15 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       temperature = data['the_temp'].round();
       status = data['weather_state_name'].replaceAll(' ', '').toLowerCase();
+      icon = data['weather_state_abbr'];
     });
-    print(temperature);
   }
 
-  void onTextFieldSubmitted(String input){
-    fetchSearch(input);
-    fetchLocation();
+  void onTextFieldSubmitted(String input) async{
+    await fetchSearch(input);
+    await fetchLocation();
   }
 
->>>>>>> Getting API
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -62,7 +73,7 @@ class _MyAppState extends State<MyApp> {
             fit: BoxFit.cover,
           ),
         ),
-        child: Scaffold(
+        child: temperature==null ? Center(child: CircularProgressIndicator()): Scaffold(
           backgroundColor: Colors.transparent,
           body: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -71,8 +82,14 @@ class _MyAppState extends State<MyApp> {
               Column(
                 children: <Widget>[
                   Center(
+                    child: Image.network(
+                      'https://www.metaweather.com/static/img/weather/png/' +icon +'.png',
+                      width: 100,
+                    ),
+                  ),
+                  Center(
                     child: Text(
-                      temperature.toString() + '°Celcius',
+                      temperature.toString() + '°C',
                       style: TextStyle(color: Colors.white, fontSize: 60),
                     ),
                   ),
@@ -99,6 +116,13 @@ class _MyAppState extends State<MyApp> {
                         prefixIcon: Icon(Icons.search, color: Colors.white), 
                       ),
                     )
+                  ),
+                  Text(
+                    errorMessage,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.redAccent, fontSize: Platform.isAndroid ? 15.0: 20.0
+                    ),
                   )
                 ],
               )
