@@ -17,7 +17,7 @@ class _MyAppState extends State<MyApp> {
   String location = 'San Fransisco';
   int woeid = 2487956;
   String status = 'clear';
-  String icon = 'c';
+  String icon = '';
   String errorMessage ='';
 
   String searchURL = 'https://www.metaweather.com/api/location/search/?query=';
