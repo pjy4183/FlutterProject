@@ -111,7 +111,7 @@ class _MyAppState extends State<MyApp> {
                       },
                       style: TextStyle(color: Colors.white, fontSize: 25),
                       decoration: InputDecoration(
-                        hintText: 'Search location here...',
+                        hintText: 'Search location here....',
                         hintStyle: TextStyle(color: Colors.white, fontSize: 18),
                         prefixIcon: Icon(Icons.search, color: Colors.white), 
                       ),
