@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
+import 'package:geolocator/geolocator.dart';
 
 void main() {
   runApp(MyApp());
@@ -19,6 +20,11 @@ class _MyAppState extends State<MyApp> {
   String status = 'clear';
   String icon = '';
   String errorMessage ='';
+
+  final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
+
+  Position _currentPosition;
+  String _currentAddress;
 
   String searchURL = 'https://www.metaweather.com/api/location/search/?query=';
   String locationURL = 'https://www.metaweather.com/api/location/';
@@ -63,6 +69,38 @@ class _MyAppState extends State<MyApp> {
     await fetchLocation();
   }
 
+  _getCurrentLocation() {
+    geolocator
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
+        .then((Position position) {
+      setState(() {
+        _currentPosition = position;
+      });
+
+      _getAddressFromLatLng();
+    }).catchError((e) {
+      print(e);
+    });
+  }
+
+  _getAddressFromLatLng() async {
+    try {
+      List<Placemark> p = await geolocator.placemarkFromCoordinates(
+          _currentPosition.latitude, _currentPosition.longitude);
+
+      Placemark place = p[0];
+
+      setState(() {
+        _currentAddress =
+            "${place.locality}, ${place.postalCode}, ${place.country}";
+      });
+      onTextFieldSubmitted(place.locality);
+      print(place.locality);
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -74,6 +112,18 @@ class _MyAppState extends State<MyApp> {
           ),
         ),
         child: temperature==null ? Center(child: CircularProgressIndicator()): Scaffold(
+          appBar: AppBar(actions: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(right: 20.0),
+              child: GestureDetector(
+                onTap: () {_getCurrentLocation();},
+                child: Icon(Icons.location_city, size:36.0)
+              ),
+            )
+          ],
+          backgroundColor: Colors.transparent,
+            elevation: 0.0,
+          ),
           backgroundColor: Colors.transparent,
           body: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
