@@ -137,7 +137,7 @@ class ShowWeather extends StatelessWidget {
           padding: EdgeInsets.only(right: 32, left: 32, top: 10),
           child: Column(
             children: <Widget>[
-              Text(city,style: TextStyle(color: Colors.white70, fontSize: 30, fontWeight: FontWeight.bold),),
+              Text(weather.name+'/'+weather.country.toString(),style: TextStyle(color: Colors.white70, fontSize: 30, fontWeight: FontWeight.bold),),
               SizedBox(height: 10,),
 
               Text(weather.temp.round().toString()+"C",style: TextStyle(color: Colors.white70, fontSize: 50),),
@@ -156,23 +156,6 @@ class ShowWeather extends StatelessWidget {
                     children: <Widget>[
                       Text(weather.temp_max.round().toString()+"C",style: TextStyle(color: Colors.white70, fontSize: 30),),
                       Text("Max Temprature",style: TextStyle(color: Colors.white70, fontSize: 14),),
-                    ],
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      Text(weather.lat.toString(),style: TextStyle(color: Colors.white70, fontSize: 30),),
-                      Text("latitude",style: TextStyle(color: Colors.white70, fontSize: 14),),
-                    ],
-                  ),
-                  Column(
-                    children: <Widget>[
-                      Text(weather.lon.toString(),style: TextStyle(color: Colors.white70, fontSize: 30),),
-                      Text("longtitude",style: TextStyle(color: Colors.white70, fontSize: 14),),
                     ],
                   ),
                 ],
