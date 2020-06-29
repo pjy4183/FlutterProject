@@ -37,10 +37,10 @@ class WeatherIsLoading extends WeatherState {
 
 class WeatherIsLoaded extends WeatherState {
   final _weather;
-
+  WeatherModel get getWeather => _weather;
   WeatherIsLoaded(this._weather);
   @override
-  List<Object> get props => [];
+  List<Object> get props => [_weather];
 }
 
 class WeatherIsNotLoaded extends WeatherState {
