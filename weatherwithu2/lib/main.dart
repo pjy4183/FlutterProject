@@ -14,6 +14,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -39,10 +40,15 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   @override
+  initState() {
+    super.initState();
+    _getCurrentLocation();
+  }
   Widget build(BuildContext context) {
     final weatherBloc = BlocProvider.of<WeatherBloc>(context);
     var cityController = TextEditingController();
     String errorMessage = "";
+
     return Scaffold(
       backgroundColor: Colors.grey[900],
       resizeToAvoidBottomInset: false,
@@ -106,28 +112,6 @@ class _SearchPageState extends State<SearchPage> {
                   },
                 ),
               ]),
-          Center(
-            child: Column(
-              children: <Widget>[
-                Text(
-                  'WeatherWithU 2',
-                  style: TextStyle(
-                      fontSize: 40,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.blue),
-                ),
-                Container(
-                  child: FlareActor(
-                    "assets/WorldSpin.flr",
-                    fit: BoxFit.contain,
-                    animation: "roll",
-                  ),
-                  height: 300,
-                  width: 300,
-                )
-              ],
-            ),
-          ),
           BlocBuilder<WeatherBloc, WeatherState>(
             builder: (context, state) {
               if (state is WeatherIsNotSearch)
@@ -152,6 +136,7 @@ class _SearchPageState extends State<SearchPage> {
                             fontWeight: FontWeight.w200,
                             color: Colors.white70),
                       ),
+                      
                     ],
                   ),
                 );
@@ -221,6 +206,22 @@ class ShowWeather extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Text(
+              weather.name + '/'+ weather.country,
+              style: TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.blue),
+            ),
+            Container(
+              child: FlareActor(
+                "assets/WorldSpin.flr",
+                fit: BoxFit.contain,
+                animation: "roll",
+              ),
+              height: 300,
+              width: 300,
+            ),
+            Text(
               weather.name + '/' + weather.country.toString(),
               style: TextStyle(
                   color: Colors.white70,
@@ -231,11 +232,15 @@ class ShowWeather extends StatelessWidget {
               height: 10,
             ),
             Text(
-              weather.temp.round().toString() + "C",
+              weather.temp.round().toString() + "°C",
               style: TextStyle(color: Colors.white70, fontSize: 50),
             ),
             Text(
-              "Temprature",
+              "(min " + weather.temp_min.round().toString() + "°C/ " + "max " + weather.temp_max.round().toString() + "°C)",
+              style: TextStyle(color: Colors.white70, fontSize: 14),
+            ),
+            Text(
+              weather.description.toString(),
               style: TextStyle(color: Colors.white70, fontSize: 14),
             ),
             Row(
@@ -244,7 +249,7 @@ class ShowWeather extends StatelessWidget {
                 Column(
                   children: <Widget>[
                     Text(
-                      weather.temp_min.round().toString() + "C",
+                      weather.temp_min.round().toString() + "°C",
                       style: TextStyle(color: Colors.white70, fontSize: 30),
                     ),
                     Text(
@@ -256,7 +261,7 @@ class ShowWeather extends StatelessWidget {
                 Column(
                   children: <Widget>[
                     Text(
-                      weather.temp_max.round().toString() + "C",
+                      weather.temp_max.round().toString() + "°C",
                       style: TextStyle(color: Colors.white70, fontSize: 30),
                     ),
                     Text(

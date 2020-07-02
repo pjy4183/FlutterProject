@@ -19,9 +19,10 @@ class WeatherRepo {
 
     final data1 = jsonDecoded['coord'];
     final data2 = jsonDecoded['main'];
+    final description = jsonDecoded['weather'][0]['description'];
     final city = jsonDecoded['name'];
     final country = jsonDecoded['sys']['country'];
 
-    return WeatherModel.fromJason(data2, data1, city, country);
+    return WeatherModel.fromJason(data2, data1, city, country, description);
   }
 }
