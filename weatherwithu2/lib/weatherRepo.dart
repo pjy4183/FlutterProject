@@ -23,7 +23,8 @@ class WeatherRepo {
     final city = jsonDecoded['name'];
     final country = jsonDecoded['sys']['country'];
     final wind = jsonDecoded['wind']['speed'];
+    final icon = jsonDecoded['weather'][0]['icon'];
 
-    return WeatherModel.fromJason(data2, data1, city, country, description, wind);
+    return WeatherModel.fromJason(data2, data1, city, country, description, wind, icon);
   }
 }

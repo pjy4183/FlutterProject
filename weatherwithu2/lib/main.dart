@@ -64,6 +64,9 @@ class _SearchPageState extends State<SearchPage> {
               children: <Widget>[
                 Column(
                   children: <Widget>[
+                    SizedBox(
+                      height: 30,
+                    ),
                     Container(
                         margin: const EdgeInsets.all(13),
                         height: 45,
@@ -124,6 +127,15 @@ class _SearchPageState extends State<SearchPage> {
                   ),
                   child: Column(
                     children: <Widget>[
+                      Container(
+                        child: FlareActor(
+                          "assets/WorldSpin.flr",
+                          fit: BoxFit.contain,
+                          animation: "roll",
+                        ),
+                        height: 300,
+                        width: 300,
+                      ),
                       Text(
                         "Search Weather",
                         style: TextStyle(
@@ -202,7 +214,63 @@ class ShowWeather extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String icon = weather.icon;
+    IconData pic = WeatherIcons.day_lightning;
+    if (icon == '01d' || icon == '01n') {
+      if (icon == '01d')
+        pic = WeatherIcons.day_sunny;
+      else
+        pic = WeatherIcons.night_clear;
+    }
+    if (icon == '02d' || icon == '02n') {
+      if (icon == '02d')
+        pic = WeatherIcons.day_cloudy;
+      else
+        pic = WeatherIcons.night_alt_cloudy;
+    }
+    if (icon == '03d' || icon == '03n') {
+      pic = WeatherIcons.cloud;
+    }
+    if (icon == '04d' || icon == '04n') {
+      pic = WeatherIcons.cloudy;
+    }
+    if (icon == '09d' || icon == '09n') {
+      if (icon == '09d')
+        pic = WeatherIcons.day_rain;
+      else
+        pic = WeatherIcons.night_alt_rain_wind;
+    }
+    if (icon == '10d' || icon == '10n') {
+      if (icon == '10d')
+        pic = WeatherIcons.day_sleet;
+      else
+        pic = WeatherIcons.night_alt_sleet;
+    }
+    if (icon == '11d' || icon == '11n') {
+      if (icon == '11d')
+        pic = WeatherIcons.day_storm_showers;
+      else
+        pic = WeatherIcons.night_storm_showers;
+    }
+    if (icon == '13d' || icon == '13n') {
+      if (icon == '13d')
+        pic = WeatherIcons.day_snow_wind;
+      else
+        pic = WeatherIcons.night_snow_wind;
+    }
+    if (icon == '50d' || icon == '50n') {
+      pic = WeatherIcons.fog;
+    }
     return Container(
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage("images/$icon.png"), 
+                fit: BoxFit.fitWidth,
+                alignment: Alignment.center,
+              ),
+              
+              shape: BoxShape.circle,
+            ),
         padding: EdgeInsets.only(right: 32, left: 32, top: 10),
         child: Column(
           children: <Widget>[
@@ -211,21 +279,21 @@ class ShowWeather extends StatelessWidget {
               style: TextStyle(
                   fontSize: 40,
                   fontWeight: FontWeight.w500,
-                  color: Colors.blue),
+                  color: Colors.lightGreenAccent),
             ),
             Container(
-              child: FlareActor(
-                "assets/WorldSpin.flr",
-                fit: BoxFit.contain,
-                animation: "roll",
+              child: Icon(
+                pic,
+                color: Colors.white,
+                size: 150,
               ),
-              height: 300,
-              width: 300,
+              width: 250,
+              height: 250,
             ),
             Text(
-              weather.name + '/' + weather.country.toString(),
+              weather.description.toString(),
               style: TextStyle(
-                  color: Colors.white70,
+                  color: Colors.white,
                   fontSize: 30,
                   fontWeight: FontWeight.bold),
             ),
@@ -234,23 +302,19 @@ class ShowWeather extends StatelessWidget {
             ),
             Text(
               weather.temp.round().toString() + "°C",
-              style: TextStyle(color: Colors.white70, fontSize: 50),
+              style: TextStyle(color: Colors.white, fontSize: 50),
             ),
             Text(
-              "(min " +
+              "( min " +
                   weather.temp_min.round().toString() +
-                  "°C/ " +
+                  "°C / " +
                   "max " +
                   weather.temp_max.round().toString() +
-                  "°C)",
-              style: TextStyle(color: Colors.white70, fontSize: 14),
-            ),
-            Text(
-              weather.description.toString(),
+                  "°C )",
               style: TextStyle(color: Colors.white70, fontSize: 14),
             ),
             SizedBox(
-              height: 10,
+              height: 30,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -261,31 +325,37 @@ class ShowWeather extends StatelessWidget {
                   padding: const EdgeInsets.all(6.0),
                   margin: const EdgeInsets.all(2.0),
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.blueAccent),
+                    border: Border.all(color: Colors.lightGreenAccent),
                     borderRadius: BorderRadius.circular(18.0),
                   ),
-                    child: Column(
-                      children: <Widget>[
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Icon(WeatherIcons.humidity, color: Colors.white70,),
-                        SizedBox(
-                          height: 15,
-                        ), 
-                        Text(
-                          weather.humidity.round().toString() + " %",
-                          style: TextStyle(color: Colors.white70, fontSize: 28, fontWeight: FontWeight.w500),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ), 
-                        Text(
-                          "Humidity",
-                          style: TextStyle(color: Colors.white70, fontSize: 12),
-                        ),
-                      ],
-                    ),
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Icon(
+                        WeatherIcons.humidity,
+                        color: Colors.lightBlue,
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Text(
+                        weather.humidity.round().toString() + " %",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 28,
+                            fontWeight: FontWeight.w500),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "Humidity",
+                        style: TextStyle(color: Colors.white70, fontSize: 12),
+                      ),
+                    ],
+                  ),
                 ),
                 Container(
                   width: 100,
@@ -293,45 +363,53 @@ class ShowWeather extends StatelessWidget {
                   padding: const EdgeInsets.all(3.0),
                   margin: const EdgeInsets.all(2.0),
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.blueAccent),
+                    border: Border.all(color: Colors.lightGreenAccent),
                     borderRadius: BorderRadius.circular(18.0),
                   ),
-                    child: Column(
-                      children: <Widget>[
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Icon(WeatherIcons.strong_wind, color: Colors.white70,),
-                        SizedBox(
-                          height: 15,
-                        ), 
-                        Row(
-                          children: <Widget>[
-                            SizedBox(
-                              width: 5,
-                            ), 
-                            Text(
-                              weather.wind.toString(),
-                              textAlign: TextAlign.end,
-                              style: TextStyle(color: Colors.white70, fontSize: 30, fontWeight: FontWeight.w500),
-                            ),
-                            Text(
-                              " m/s",
-                              textAlign: TextAlign.end,
-                              style: TextStyle(color: Colors.white70, fontSize:15, fontWeight: FontWeight.w500),
-                            ),
-                          ],
-                        ),
-                        
-                        SizedBox(
-                          height: 10,
-                        ), 
-                        Text(
-                          "Wind Speed",
-                          style: TextStyle(color: Colors.white70, fontSize: 12),
-                        ),
-                      ],
-                    ),
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Icon(
+                        WeatherIcons.strong_wind,
+                        color: Colors.blueAccent,
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Row(
+                        children: <Widget>[
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            weather.wind.toStringAsFixed(1).toString(),
+                            textAlign: TextAlign.end,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 25,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          Text(
+                            "m/s",
+                            textAlign: TextAlign.end,
+                            style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "Wind Speed",
+                        style: TextStyle(color: Colors.white70, fontSize: 12),
+                      ),
+                    ],
+                  ),
                 ),
                 Container(
                   width: 100,
@@ -339,53 +417,40 @@ class ShowWeather extends StatelessWidget {
                   padding: const EdgeInsets.all(3.0),
                   margin: const EdgeInsets.all(2.0),
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.blueAccent),
+                    border: Border.all(color: Colors.lightGreenAccent),
                     borderRadius: BorderRadius.circular(18.0),
                   ),
-                    child: Column(
-                      children: <Widget>[
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Icon(WeatherIcons.thermometer, color: Colors.white70,),
-                        SizedBox(
-                          height: 15,
-                        ), 
-                        Text(
-                          weather.feels_like.round().toString() + "°C",
-                          style: TextStyle(color: Colors.white70, fontSize: 30, fontWeight: FontWeight.w500),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ), 
-                        Text(
-                          "Feels Like",
-                          style: TextStyle(color: Colors.white70, fontSize: 12),
-                        ),
-                      ],
-                    ),
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Icon(
+                        WeatherIcons.thermometer,
+                        color: Colors.redAccent,
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Text(
+                        weather.feels_like.round().toString() + "°C",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 30,
+                            fontWeight: FontWeight.w500),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "Feels Like",
+                        style: TextStyle(color: Colors.white70, fontSize: 12),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
-            // SizedBox(
-            //   height: 20,
-            // ),
-            // Container(
-            //   width: double.infinity,
-            //   height: 50,
-            //   child: FlatButton(
-            //     shape: new RoundedRectangleBorder(
-            //         borderRadius: BorderRadius.all(Radius.circular(10))),
-            //     onPressed: () {
-            //       BlocProvider.of<WeatherBloc>(context).add(ResetWeather());
-            //     },
-            //     color: Colors.lightBlue,
-            //     child: Text(
-            //       "Search",
-            //       style: TextStyle(color: Colors.white70, fontSize: 16),
-            //     ),
-            //   ),
-            // )
           ],
         ));
   }
