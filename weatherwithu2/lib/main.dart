@@ -5,6 +5,7 @@ import 'package:weatherwithu2/weatherRepo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:weather_icons/weather_icons.dart';
 import 'dart:convert';
 import 'dart:io';
 
@@ -14,7 +15,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
-  
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -44,6 +45,7 @@ class _SearchPageState extends State<SearchPage> {
     super.initState();
     _getCurrentLocation();
   }
+
   Widget build(BuildContext context) {
     final weatherBloc = BlocProvider.of<WeatherBloc>(context);
     var cityController = TextEditingController();
@@ -136,7 +138,6 @@ class _SearchPageState extends State<SearchPage> {
                             fontWeight: FontWeight.w200,
                             color: Colors.white70),
                       ),
-                      
                     ],
                   ),
                 );
@@ -206,7 +207,7 @@ class ShowWeather extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Text(
-              weather.name + '/'+ weather.country,
+              weather.name + '/' + weather.country,
               style: TextStyle(
                   fontSize: 40,
                   fontWeight: FontWeight.w500,
@@ -236,61 +237,155 @@ class ShowWeather extends StatelessWidget {
               style: TextStyle(color: Colors.white70, fontSize: 50),
             ),
             Text(
-              "(min " + weather.temp_min.round().toString() + "°C/ " + "max " + weather.temp_max.round().toString() + "°C)",
+              "(min " +
+                  weather.temp_min.round().toString() +
+                  "°C/ " +
+                  "max " +
+                  weather.temp_max.round().toString() +
+                  "°C)",
               style: TextStyle(color: Colors.white70, fontSize: 14),
             ),
             Text(
               weather.description.toString(),
               style: TextStyle(color: Colors.white70, fontSize: 14),
             ),
+            SizedBox(
+              height: 10,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    Text(
-                      weather.temp_min.round().toString() + "°C",
-                      style: TextStyle(color: Colors.white70, fontSize: 30),
+                Container(
+                  width: 100,
+                  height: 140,
+                  padding: const EdgeInsets.all(6.0),
+                  margin: const EdgeInsets.all(2.0),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.blueAccent),
+                    borderRadius: BorderRadius.circular(18.0),
+                  ),
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Icon(WeatherIcons.humidity, color: Colors.white70,),
+                        SizedBox(
+                          height: 15,
+                        ), 
+                        Text(
+                          weather.humidity.round().toString() + " %",
+                          style: TextStyle(color: Colors.white70, fontSize: 28, fontWeight: FontWeight.w500),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ), 
+                        Text(
+                          "Humidity",
+                          style: TextStyle(color: Colors.white70, fontSize: 12),
+                        ),
+                      ],
                     ),
-                    Text(
-                      "Min Temprature",
-                      style: TextStyle(color: Colors.white70, fontSize: 14),
-                    ),
-                  ],
                 ),
-                Column(
-                  children: <Widget>[
-                    Text(
-                      weather.temp_max.round().toString() + "°C",
-                      style: TextStyle(color: Colors.white70, fontSize: 30),
+                Container(
+                  width: 100,
+                  height: 140,
+                  padding: const EdgeInsets.all(3.0),
+                  margin: const EdgeInsets.all(2.0),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.blueAccent),
+                    borderRadius: BorderRadius.circular(18.0),
+                  ),
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Icon(WeatherIcons.strong_wind, color: Colors.white70,),
+                        SizedBox(
+                          height: 15,
+                        ), 
+                        Row(
+                          children: <Widget>[
+                            SizedBox(
+                              width: 5,
+                            ), 
+                            Text(
+                              weather.wind.toString(),
+                              textAlign: TextAlign.end,
+                              style: TextStyle(color: Colors.white70, fontSize: 30, fontWeight: FontWeight.w500),
+                            ),
+                            Text(
+                              " m/s",
+                              textAlign: TextAlign.end,
+                              style: TextStyle(color: Colors.white70, fontSize:15, fontWeight: FontWeight.w500),
+                            ),
+                          ],
+                        ),
+                        
+                        SizedBox(
+                          height: 10,
+                        ), 
+                        Text(
+                          "Wind Speed",
+                          style: TextStyle(color: Colors.white70, fontSize: 12),
+                        ),
+                      ],
                     ),
-                    Text(
-                      "Max Temprature",
-                      style: TextStyle(color: Colors.white70, fontSize: 14),
+                ),
+                Container(
+                  width: 100,
+                  height: 140,
+                  padding: const EdgeInsets.all(3.0),
+                  margin: const EdgeInsets.all(2.0),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.blueAccent),
+                    borderRadius: BorderRadius.circular(18.0),
+                  ),
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Icon(WeatherIcons.thermometer, color: Colors.white70,),
+                        SizedBox(
+                          height: 15,
+                        ), 
+                        Text(
+                          weather.feels_like.round().toString() + "°C",
+                          style: TextStyle(color: Colors.white70, fontSize: 30, fontWeight: FontWeight.w500),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ), 
+                        Text(
+                          "Feels Like",
+                          style: TextStyle(color: Colors.white70, fontSize: 12),
+                        ),
+                      ],
                     ),
-                  ],
                 ),
               ],
             ),
-            SizedBox(
-              height: 20,
-            ),
-            Container(
-              width: double.infinity,
-              height: 50,
-              child: FlatButton(
-                shape: new RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10))),
-                onPressed: () {
-                  BlocProvider.of<WeatherBloc>(context).add(ResetWeather());
-                },
-                color: Colors.lightBlue,
-                child: Text(
-                  "Search",
-                  style: TextStyle(color: Colors.white70, fontSize: 16),
-                ),
-              ),
-            )
+            // SizedBox(
+            //   height: 20,
+            // ),
+            // Container(
+            //   width: double.infinity,
+            //   height: 50,
+            //   child: FlatButton(
+            //     shape: new RoundedRectangleBorder(
+            //         borderRadius: BorderRadius.all(Radius.circular(10))),
+            //     onPressed: () {
+            //       BlocProvider.of<WeatherBloc>(context).add(ResetWeather());
+            //     },
+            //     color: Colors.lightBlue,
+            //     child: Text(
+            //       "Search",
+            //       style: TextStyle(color: Colors.white70, fontSize: 16),
+            //     ),
+            //   ),
+            // )
           ],
         ));
   }
