@@ -31,10 +31,17 @@ class WeatherRepo {
     final wind = jsonDecoded['wind']['speed'];
     final icon = jsonDecoded['weather'][0]['icon'];
     
-    final forecast = jsonDecoded2['daily'][1]['temp']['min'];
+    final forecast1 = jsonDecoded2['daily'][1];
+    final forecast2 = jsonDecoded2['daily'][2];
+    final forecast3 = jsonDecoded2['daily'][3];
+    final forecast4 = jsonDecoded2['daily'][4];
+    final forecast5 = jsonDecoded2['daily'][5];
+    final forecast6 = jsonDecoded2['daily'][6];
+    final forecast7 = jsonDecoded2['daily'][7];
 
 
-    return WeatherModel.fromJason(data2, data1, city, country, description, wind, icon, forecast);
+
+    return WeatherModel.fromJason(data2, data1, city, country, description, wind, icon, forecast1, forecast2, forecast3, forecast4, forecast5, forecast6, forecast7);
   }
   
 }

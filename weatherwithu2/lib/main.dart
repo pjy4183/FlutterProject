@@ -278,8 +278,7 @@ class ShowWeather extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Text(
-              weather.forecast.toString(),
-              // weather.name + '/' + weather.country,
+              weather.name + '/' + weather.country,
               style: TextStyle(
                   fontSize: 40,
                   fontWeight: FontWeight.w500,
