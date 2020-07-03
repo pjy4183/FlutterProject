@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:weather_icons/weather_icons.dart';
+import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
 
@@ -200,6 +201,7 @@ class _SearchPageState extends State<SearchPage> {
             "${place.locality}, ${place.postalCode}, ${place.country}";
       });
       weatherBloc.add(FetchWeather(place.locality));
+      
     } catch (e) {
       print(e);
     }
@@ -211,9 +213,10 @@ class ShowWeather extends StatelessWidget {
   final city;
 
   ShowWeather(this.weather, this.city);
-
+  
   @override
   Widget build(BuildContext context) {
+
     String icon = weather.icon;
     IconData pic = WeatherIcons.day_lightning;
     if (icon == '01d' || icon == '01n') {
@@ -275,7 +278,8 @@ class ShowWeather extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Text(
-              weather.name + '/' + weather.country,
+              weather.forecast.toString(),
+              // weather.name + '/' + weather.country,
               style: TextStyle(
                   fontSize: 40,
                   fontWeight: FontWeight.w500,

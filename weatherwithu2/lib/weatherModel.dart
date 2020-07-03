@@ -11,12 +11,13 @@ class WeatherModel {
   final lon;
   final wind;
   final icon;
+  final forecast;
   
   // final icon;
 
-  WeatherModel(this.name, this.country,  this.description, this.temp, this.feels_like, this.humidity, this.temp_max, this.temp_min, this.lon,this.lat, this.wind, this.icon);
+  WeatherModel(this.name, this.country,  this.description, this.temp, this.feels_like, this.humidity, this.temp_max, this.temp_min, this.lon,this.lat, this.wind, this.icon, this.forecast);
 
-  factory WeatherModel.fromJason(Map<String, dynamic> json,Map<String, dynamic> json2, String name, String country, String description, double wind, String icon) {
+  factory WeatherModel.fromJason(Map<String, dynamic> json,Map<String, dynamic> json2, String name, String country, String description, double wind, String icon, double forecast) {
     return WeatherModel(
       name,
       country,
@@ -29,8 +30,8 @@ class WeatherModel {
       json2['lon'],
       json2['lat'],
       wind,
-      icon
-      // json3['icon']
+      icon,
+      forecast
     );
   }
 
