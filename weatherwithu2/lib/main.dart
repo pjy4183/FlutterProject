@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:weather_icons/weather_icons.dart';
-import 'package:http/http.dart' as http;
+import 'package:snapping_sheet/snapping_sheet.dart';
 import 'dart:convert';
 import 'dart:io';
 
@@ -29,9 +29,11 @@ class MyApp extends StatelessWidget {
             resizeToAvoidBottomInset: false,
             backgroundColor: Colors.grey[900],
             body: BlocProvider(
-              builder: (context) => WeatherBloc(WeatherRepo()),
-              child: SearchPage(),
-            )));
+                  builder: (context) => WeatherBloc(WeatherRepo()),
+                  child: SearchPage(),
+                  
+                ),
+            ));
   }
 }
 
@@ -55,118 +57,131 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       backgroundColor: Colors.grey[900],
       resizeToAvoidBottomInset: false,
-      body: Column(
-        //mainAxisAlignment: MainAxisAlignment.center,
-        //crossAxisAlignment: CrossAxisAlignment.start,
+      body: Stack(
         children: <Widget>[
-          Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Container(
-                        margin: const EdgeInsets.all(13),
-                        height: 45,
-                        width: 330,
-                        child: TextField(
-                          onSubmitted: (String input) {
-                            weatherBloc.add(FetchWeather(input));
-                          },
-                          style: TextStyle(color: Colors.white, fontSize: 25),
-                          decoration: InputDecoration(
-                            hintText: 'Search location here....',
-                            hintStyle:
-                                TextStyle(color: Colors.white, fontSize: 18),
-                            prefixIcon: Icon(
-                              Icons.search,
-                              color: Colors.white70,
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
-                                borderSide: BorderSide(
-                                    color: Colors.white70,
-                                    style: BorderStyle.solid)),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
-                                borderSide: BorderSide(
-                                    color: Colors.blue,
-                                    style: BorderStyle.solid)),
-                          ),
-                        )),
-                    Text(
-                      errorMessage,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.redAccent,
-                        fontSize: 15.0,
-                      ),
-                    )
-                  ],
-                ),
-                IconButton(
-                  icon: Icon(Icons.location_on),
-                  color: Colors.white70,
-                  iconSize: 38,
-                  onPressed: () {
-                    _getCurrentLocation();
-                  },
-                ),
-              ]),
-          BlocBuilder<WeatherBloc, WeatherState>(
-            builder: (context, state) {
-              if (state is WeatherIsNotSearch)
-                return Container(
-                  padding: EdgeInsets.only(
-                    left: 32,
-                    right: 32,
-                  ),
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        child: FlareActor(
-                          "assets/WorldSpin.flr",
-                          fit: BoxFit.contain,
-                          animation: "roll",
+          SnappingSheet(
+                      sheetBelow: SnappingSheetContent(
+                        child: Container(
+                            color: Colors.red,
                         ),
-                        height: 300,
-                        width: 300,
+                        heightBehavior: SnappingSheetHeight.fit()
                       ),
-                      Text(
-                        "Search Weather",
-                        style: TextStyle(
-                            fontSize: 40,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white70),
+                    ),
+          Column(
+            //mainAxisAlignment: MainAxisAlignment.center,
+            //crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Column(
+                      children: <Widget>[
+                        SizedBox(
+                          height: 30,
+                        ),
+                        Container(
+                            margin: const EdgeInsets.all(13),
+                            height: 45,
+                            width: 330,
+                            child: TextField(
+                              onSubmitted: (String input) {
+                                weatherBloc.add(FetchWeather(input));
+                              },
+                              style: TextStyle(color: Colors.white, fontSize: 25),
+                              decoration: InputDecoration(
+                                hintText: 'Search location here....',
+                                hintStyle:
+                                    TextStyle(color: Colors.white, fontSize: 18),
+                                prefixIcon: Icon(
+                                  Icons.search,
+                                  color: Colors.white70,
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10)),
+                                    borderSide: BorderSide(
+                                        color: Colors.white70,
+                                        style: BorderStyle.solid)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10)),
+                                    borderSide: BorderSide(
+                                        color: Colors.blue,
+                                        style: BorderStyle.solid)),
+                              ),
+                            )),
+                        Text(
+                          errorMessage,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.redAccent,
+                            fontSize: 15.0,
+                          ),
+                        )
+                      ],
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.location_on),
+                      color: Colors.white70,
+                      iconSize: 38,
+                      onPressed: () {
+                        _getCurrentLocation();
+                      },
+                    ),
+                  ]),
+              BlocBuilder<WeatherBloc, WeatherState>(
+                builder: (context, state) {
+                  if (state is WeatherIsNotSearch)
+                    return Container(
+                      padding: EdgeInsets.only(
+                        left: 32,
+                        right: 32,
                       ),
-                      Text(
-                        "Instanly",
-                        style: TextStyle(
-                            fontSize: 40,
-                            fontWeight: FontWeight.w200,
-                            color: Colors.white70),
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            child: FlareActor(
+                              "assets/WorldSpin.flr",
+                              fit: BoxFit.contain,
+                              animation: "roll",
+                            ),
+                            height: 300,
+                            width: 300,
+                          ),
+                          Text(
+                            "Search Weather",
+                            style: TextStyle(
+                                fontSize: 40,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white70),
+                          ),
+                          Text(
+                            "Instanly",
+                            style: TextStyle(
+                                fontSize: 40,
+                                fontWeight: FontWeight.w200,
+                                color: Colors.white70),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                );
-              else if (state is WeatherIsLoading)
-                return Center(child: CircularProgressIndicator());
-              else if (state is WeatherIsLoaded)
-                return ShowWeather(state.getWeather, cityController.text);
-              else
-                return Text(
-                  "Error",
-                  style: TextStyle(color: Colors.white),
-                );
-            },
-          )
+                    );
+                  else if (state is WeatherIsLoading)
+                    return Center(child: CircularProgressIndicator());
+                  else if (state is WeatherIsLoaded)
+                    return ShowWeather(state.getWeather, cityController.text);
+                  else
+                    return Text(
+                      "Sorry, cannot find the city...",
+                      style: TextStyle(color: Colors.white),
+                    );
+                },
+              ),
+            ],
+          ),
         ],
       ),
+      
     );
   }
 
@@ -264,16 +279,17 @@ class ShowWeather extends StatelessWidget {
     if (icon == '50d' || icon == '50n') {
       pic = WeatherIcons.fog;
     }
+    
     return Container(
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage("images/$icon.png"), 
-                fit: BoxFit.fitWidth,
-                alignment: Alignment.center,
-              ),
+        // decoration: BoxDecoration(
+        //     image: DecorationImage(
+        //         image: AssetImage("images/$icon.png"), 
+        //         fit: BoxFit.fitWidth,
+        //         alignment: Alignment.center,
+        //       ),
               
-              shape: BoxShape.circle,
-            ),
+        //       shape: BoxShape.circle,
+        //     ),
         padding: EdgeInsets.only(right: 32, left: 32, top: 10),
         child: Column(
           children: <Widget>[
@@ -284,14 +300,18 @@ class ShowWeather extends StatelessWidget {
                   fontWeight: FontWeight.w500,
                   color: Colors.lightGreenAccent),
             ),
-            Container(
-              child: Icon(
-                pic,
-                color: Colors.white,
-                size: 150,
-              ),
-              width: 250,
-              height: 250,
+            Stack(
+              children: <Widget>[
+                Container(
+                  child: Icon(
+                    pic,
+                    color: Colors.white,
+                    size: 150,
+                  ),
+                  width: 250,
+                  height: 250,
+                ),
+              ],
             ),
             Text(
               weather.description.toString(),
@@ -452,8 +472,12 @@ class ShowWeather extends StatelessWidget {
                     ],
                   ),
                 ),
+                
               ],
             ),
+
+            
+
           ],
         ));
   }
