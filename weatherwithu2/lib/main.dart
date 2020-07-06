@@ -223,12 +223,42 @@ class _SearchPageState extends State<SearchPage> {
   }
 }
 
-class ShowWeather extends StatelessWidget {
+
+
+class ShowWeather extends StatefulWidget {
   WeatherModel weather;
   final city;
 
   ShowWeather(this.weather, this.city);
+  @override
+  _ShowWeatherState createState() => _ShowWeatherState(weather, city);
+}
+
+class _ShowWeatherState extends State<ShowWeather>
+    with SingleTickerProviderStateMixin {
+  var _controller = SnappingSheetController();
+  AnimationController _arrowIconAnimationController;
+  Animation<double> _arrowIconAnimation;
+
+  double _moveAmount = 0.0;
   
+
+  @override
+  void initState() {
+    super.initState();
+    _arrowIconAnimationController = AnimationController(vsync: this, duration: Duration(seconds: 1));
+    _arrowIconAnimation = Tween(begin: 0.0, end: 0.2).animate(CurvedAnimation(
+      curve: Curves.elasticOut, 
+      reverseCurve: Curves.elasticIn,
+      parent: _arrowIconAnimationController)
+    );
+  }
+  WeatherModel weather;
+  final city;
+
+  _ShowWeatherState(this.weather, this.city);
+  
+
   @override
   Widget build(BuildContext context) {
 
@@ -280,205 +310,331 @@ class ShowWeather extends StatelessWidget {
       pic = WeatherIcons.fog;
     }
     
-    return Container(
-        // decoration: BoxDecoration(
-        //     image: DecorationImage(
-        //         image: AssetImage("images/$icon.png"), 
-        //         fit: BoxFit.fitWidth,
-        //         alignment: Alignment.center,
-        //       ),
-              
-        //       shape: BoxShape.circle,
-        //     ),
-        padding: EdgeInsets.only(right: 32, left: 32, top: 10),
+    return Stack(
+      children: <Widget>[
+
+        SnappingSheet(
+        sheetAbove: SnappingSheetContent(
+          child: Padding(
+            padding: EdgeInsets.only(bottom: 20.0),
+            child: Align(
+              alignment: Alignment(0.90, 1.0),
+              child: FloatingActionButton(
+                onPressed: () {
+                  if(_controller.snapPositions.last != _controller.currentSnapPosition) {
+                    _controller.snapToPosition(_controller.snapPositions.last);
+                  } 
+                  else {
+                    _controller.snapToPosition(_controller.snapPositions.first);
+                  }
+                },
+                child: RotationTransition(
+                  child: Icon(Icons.arrow_upward),
+                  turns: _arrowIconAnimation,
+                ),
+              ),
+            ),
+          ),
+        ),
+        onSnapEnd: () {
+          if(_controller.snapPositions.last != _controller.currentSnapPosition) {
+            _arrowIconAnimationController.reverse();
+          }
+          else {
+            _arrowIconAnimationController.forward();
+          }
+        },
+        onMove: (moveAmount) {
+          setState(() {
+            _moveAmount = moveAmount;
+          });
+        },
+        snappingSheetController: _controller,
+        snapPositions: const [
+          SnapPosition(positionPixel: 0.0, snappingCurve: Curves.elasticOut, snappingDuration: Duration(milliseconds: 750)),
+          SnapPosition(positionFactor: 0.4),
+          SnapPosition(positionFactor: 0.8),
+        ],
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              weather.name + '/' + weather.country,
-              style: TextStyle(
-                  fontSize: 40,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.lightGreenAccent),
+              'Moved ${_moveAmount.round()} pixels',
+              style: TextStyle(fontSize: 20.0),
             ),
-            Stack(
+          ],
+        ),
+        grabbingHeight: MediaQuery.of(context).padding.bottom + 50,
+        grabbing: GrabSection(),
+        sheetBelow: SnappingSheetContent(
+          child: SheetContent()
+        ),
+      ),
+
+        Container(
+            // decoration: BoxDecoration(
+            //     image: DecorationImage(
+            //         image: AssetImage("images/$icon.png"), 
+            //         fit: BoxFit.fitWidth,
+            //         alignment: Alignment.center,
+            //       ),
+                  
+            //       shape: BoxShape.circle,
+            //     ),
+            padding: EdgeInsets.only(right: 32, left: 32, top: 10),
+            child: Column(
               children: <Widget>[
-                Container(
-                  child: Icon(
-                    pic,
-                    color: Colors.white,
-                    size: 150,
-                  ),
-                  width: 250,
-                  height: 250,
+                Text(
+                  weather.name + '/' + weather.country,
+                  style: TextStyle(
+                      fontSize: 40,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.lightGreenAccent),
                 ),
-              ],
-            ),
-            Text(
-              weather.description.toString(),
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Text(
-              weather.temp.round().toString() + "°C",
-              style: TextStyle(color: Colors.white, fontSize: 50),
-            ),
-            Text(
-              "( min " +
-                  weather.temp_min.round().toString() +
-                  "°C / " +
-                  "max " +
-                  weather.temp_max.round().toString() +
-                  "°C )",
-              style: TextStyle(color: Colors.white70, fontSize: 14),
-            ),
-            SizedBox(
-              height: 30,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Container(
-                  width: 100,
-                  height: 140,
-                  padding: const EdgeInsets.all(6.0),
-                  margin: const EdgeInsets.all(2.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.lightGreenAccent),
-                    borderRadius: BorderRadius.circular(18.0),
-                  ),
-                  child: Column(
-                    children: <Widget>[
-                      SizedBox(
-                        height: 10,
+                Stack(
+                  children: <Widget>[
+                    Container(
+                      child: Icon(
+                        pic,
+                        color: Colors.white,
+                        size: 150,
                       ),
-                      Icon(
-                        WeatherIcons.humidity,
-                        color: Colors.lightBlue,
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Text(
-                        weather.humidity.round().toString() + " %",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 28,
-                            fontWeight: FontWeight.w500),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "Humidity",
-                        style: TextStyle(color: Colors.white70, fontSize: 12),
-                      ),
-                    ],
-                  ),
+                      width: 250,
+                      height: 250,
+                    ),
+                  ],
                 ),
-                Container(
-                  width: 100,
-                  height: 140,
-                  padding: const EdgeInsets.all(3.0),
-                  margin: const EdgeInsets.all(2.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.lightGreenAccent),
-                    borderRadius: BorderRadius.circular(18.0),
-                  ),
-                  child: Column(
-                    children: <Widget>[
-                      SizedBox(
-                        height: 10,
+                Text(
+                  weather.description.toString(),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  weather.temp.round().toString() + "°C",
+                  style: TextStyle(color: Colors.white, fontSize: 50),
+                ),
+                Text(
+                  "( min " +
+                      weather.temp_min.round().toString() +
+                      "°C / " +
+                      "max " +
+                      weather.temp_max.round().toString() +
+                      "°C )",
+                  style: TextStyle(color: Colors.white70, fontSize: 14),
+                ),
+                SizedBox(
+                  height: 30,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Container(
+                      width: 100,
+                      height: 140,
+                      padding: const EdgeInsets.all(6.0),
+                      margin: const EdgeInsets.all(2.0),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.lightGreenAccent),
+                        borderRadius: BorderRadius.circular(18.0),
                       ),
-                      Icon(
-                        WeatherIcons.strong_wind,
-                        color: Colors.blueAccent,
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Row(
+                      child: Column(
                         children: <Widget>[
                           SizedBox(
-                            width: 5,
+                            height: 10,
+                          ),
+                          Icon(
+                            WeatherIcons.humidity,
+                            color: Colors.lightBlue,
+                          ),
+                          SizedBox(
+                            height: 15,
                           ),
                           Text(
-                            weather.wind.toStringAsFixed(1).toString(),
-                            textAlign: TextAlign.end,
+                            weather.humidity.round().toString() + " %",
                             style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 25,
+                                fontSize: 28,
                                 fontWeight: FontWeight.w500),
                           ),
+                          SizedBox(
+                            height: 10,
+                          ),
                           Text(
-                            "m/s",
-                            textAlign: TextAlign.end,
-                            style: TextStyle(
-                                color: Colors.white70,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500),
+                            "Humidity",
+                            style: TextStyle(color: Colors.white70, fontSize: 12),
                           ),
                         ],
                       ),
-                      SizedBox(
-                        height: 10,
+                    ),
+                    Container(
+                      width: 100,
+                      height: 140,
+                      padding: const EdgeInsets.all(3.0),
+                      margin: const EdgeInsets.all(2.0),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.lightGreenAccent),
+                        borderRadius: BorderRadius.circular(18.0),
                       ),
-                      Text(
-                        "Wind Speed",
-                        style: TextStyle(color: Colors.white70, fontSize: 12),
+                      child: Column(
+                        children: <Widget>[
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Icon(
+                            WeatherIcons.strong_wind,
+                            color: Colors.blueAccent,
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Row(
+                            children: <Widget>[
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                weather.wind.toStringAsFixed(1).toString(),
+                                textAlign: TextAlign.end,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                              Text(
+                                "m/s",
+                                textAlign: TextAlign.end,
+                                style: TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            "Wind Speed",
+                            style: TextStyle(color: Colors.white70, fontSize: 12),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                    Container(
+                      width: 100,
+                      height: 140,
+                      padding: const EdgeInsets.all(3.0),
+                      margin: const EdgeInsets.all(2.0),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.lightGreenAccent),
+                        borderRadius: BorderRadius.circular(18.0),
+                      ),
+                      child: Column(
+                        children: <Widget>[
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Icon(
+                            WeatherIcons.thermometer,
+                            color: Colors.redAccent,
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Text(
+                            weather.feels_like.round().toString() + "°C",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 30,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            "Feels Like",
+                            style: TextStyle(color: Colors.white70, fontSize: 12),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-                Container(
-                  width: 100,
-                  height: 140,
-                  padding: const EdgeInsets.all(3.0),
-                  margin: const EdgeInsets.all(2.0),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.lightGreenAccent),
-                    borderRadius: BorderRadius.circular(18.0),
-                  ),
-                  child: Column(
-                    children: <Widget>[
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Icon(
-                        WeatherIcons.thermometer,
-                        color: Colors.redAccent,
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Text(
-                        weather.feels_like.round().toString() + "°C",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 30,
-                            fontWeight: FontWeight.w500),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "Feels Like",
-                        style: TextStyle(color: Colors.white70, fontSize: 12),
-                      ),
-                    ],
-                  ),
-                ),
-                
+
               ],
-            ),
-
-            
-
-          ],
-        ));
+            )),
+      ],
+    );
   }
 }
+
+
+class SheetContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.white,
+      child: ListView.builder(
+        padding: EdgeInsets.all(20.0),
+        itemCount: 7,
+        itemBuilder: (context, index) {
+          return Container(
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: Colors.grey[300], width: 1.0))
+            ),
+            child: ListTile(
+              leading: Icon(Icons.info),
+              title: Text('List item $index'),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+
+class GrabSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [BoxShadow(
+          blurRadius: 20.0,
+          color: Colors.black.withOpacity(0.2),
+        )],
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30.0),
+          topRight: Radius.circular(30.0),
+        ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Container(
+            width: 100.0,
+            height: 10.0,
+            margin: EdgeInsets.only(top: 15.0),
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+              borderRadius: BorderRadius.all(Radius.circular(5.0))
+            ),
+          ),
+          Container(
+            height: 2.0,
+            margin: EdgeInsets.only(left: 20, right: 20),
+            color: Colors.grey[300],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
