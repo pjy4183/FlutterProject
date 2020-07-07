@@ -21,10 +21,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          //visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
+        theme: ThemeData(primarySwatch: Colors.blue, canvasColor: Colors.blueGrey
+            //visualDensity: VisualDensity.adaptivePlatformDensity,
+            ),
         home: Scaffold(
           resizeToAvoidBottomInset: false,
           backgroundColor: Colors.grey[900],
@@ -298,25 +297,15 @@ class _ShowWeatherState extends State<ShowWeather>
 
     return Stack(
       children: <Widget>[
-        //SnappingSheet(
-        //sheetBelow: SnappingSheetContent(
-        //child: Container(
-        //   color: Colors.red,
-        //  ),
-        //   heightBehavior: SnappingSheetHeight.fit()
-        //    ),
-        // ),
-
         Container(
-            // decoration: BoxDecoration(
-            //     image: DecorationImage(
-            //         image: AssetImage("images/$icon.png"),
-            //         fit: BoxFit.fitWidth,
-            //         alignment: Alignment.center,
-            //       ),
-
-            //       shape: BoxShape.circle,
-            //     ),
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("images/$icon.gif"),
+                fit: BoxFit.cover,
+                alignment: Alignment.center,
+              ),
+              shape: BoxShape.circle,
+            ),
             padding: EdgeInsets.only(right: 32, left: 32, top: 10),
             child: Column(
               children: <Widget>[
@@ -540,68 +529,172 @@ class _ShowWeatherState extends State<ShowWeather>
         context: context,
         builder: (BuildContext bc) {
           return Container(
-              height: MediaQuery.of(context).size.height * .80,
-              child: Column(
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Text("$formattedDate"),
-                      Image.network('http://openweathermap.org/img/wn/${weather.day1_icon}@2x.png',width: 40,),
-                      Text(weather.day1_temp_max.round().toString() + "°C/" + weather.day1_temp_min.round().toString() +"°C"),
-                    ],
-                  ),
-                  Divider(color: Colors.black),
-                  Row(
-                    children: <Widget>[
-                      Text("$formattedDate2"),
-                      Image.network('http://openweathermap.org/img/wn/${weather.day2_icon}@2x.png',width: 40),
-                      Text(weather.day2_temp_max.round().toString() + "°C/" + weather.day2_temp_min.round().toString() +"°C"),
-                    ],
-                  ),
-                  Divider(color: Colors.black),
-                  Row(
-                    children: <Widget>[
-                      Text("$formattedDate3"),
-                      Image.network('http://openweathermap.org/img/wn/${weather.day3_icon}@2x.png',width: 40),
-                      Text(weather.day3_temp_max.round().toString() + "°C/" + weather.day3_temp_min.round().toString() +"°C"),
-                    ],
-                  ),
-                  Divider(color: Colors.black),
-                  Row(
-                    children: <Widget>[
-                      Text("$formattedDate4"),
-                      Image.network('http://openweathermap.org/img/wn/${weather.day4_icon}@2x.png',width: 40),
-                      Text(weather.day4_temp_max.round().toString() + "°C/" + weather.day4_temp_min.round().toString() +"°C"),
-                    ],
-                  ),
-                  Divider(color: Colors.black),
-                  Row(
-                    children: <Widget>[
-                      Text("$formattedDate5"),
-                      Image.network('http://openweathermap.org/img/wn/${weather.day5_icon}@2x.png',width: 40),
-                      Text(weather.day5_temp_max.round().toString() + "°C/" + weather.day5_temp_min.round().toString() +"°C"),
-                    ],
-                  ),
-                  Divider(color: Colors.black),
-                  Row(
-                    children: <Widget>[
-                      Text("$formattedDate6"),
-                      Image.network('http://openweathermap.org/img/wn/${weather.day6_icon}@2x.png',width: 40),
-                      Text(weather.day6_temp_max.round().toString() + "°C/" + weather.day6_temp_min.round().toString() +"°C"),
-                    ],
-                  ),
-                  Divider(color: Colors.black),
-                  Row(
-                    children: <Widget>[
-                      Text("$formattedDate7"),
-                      Image.network('http://openweathermap.org/img/wn/${weather.day7_icon}@2x.png',width: 40),
-                      Text(weather.day7_temp_max.round().toString() + "°C/" + weather.day7_temp_min.round().toString() +"°C"),
-                    ],
-                  ),
-                  Divider(color: Colors.black),
-                ],
-              )
-            );
+            color: Colors.black,
+            child: Container(
+                decoration: BoxDecoration(
+                    color: Theme.of(context).canvasColor,
+                    borderRadius: BorderRadius.only(
+                        topLeft: const Radius.circular(30),
+                        topRight: const Radius.circular(30))),
+                height: MediaQuery.of(context).size.height * .80,
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          "$formattedDate",
+                          style: TextStyle(fontSize: 17),
+                        ),
+                        SizedBox(
+                          width: 80,
+                        ),
+                        Image.network(
+                          'http://openweathermap.org/img/wn/${weather.day1_icon}@2x.png',
+                          width: 40,
+                        ),
+                        SizedBox(
+                          width: 80,
+                        ),
+                        Text(
+                            weather.day1_temp_max.round().toString() +
+                                "°C/" +
+                                weather.day1_temp_min.round().toString() +
+                                "°C",
+                            textAlign: TextAlign.end),
+                      ],
+                    ),
+                    Divider(color: Colors.black, indent: 16.0, endIndent: 16.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Text("$formattedDate2", style: TextStyle(fontSize: 17)),
+                        SizedBox(
+                          width: 80,
+                        ),
+                        Image.network(
+                            'http://openweathermap.org/img/wn/${weather.day2_icon}@2x.png',
+                            width: 40),
+                        SizedBox(
+                          width: 80,
+                        ),
+                        Text(weather.day2_temp_max.round().toString() +
+                            "°C/" +
+                            weather.day2_temp_min.round().toString() +
+                            "°C"),
+                      ],
+                    ),
+                    Divider(color: Colors.black, indent: 16.0, endIndent: 16.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Text("$formattedDate3", style: TextStyle(fontSize: 17)),
+                        SizedBox(
+                          width: 80,
+                        ),
+                        Image.network(
+                            'http://openweathermap.org/img/wn/${weather.day3_icon}@2x.png',
+                            width: 40),
+                        SizedBox(
+                          width: 80,
+                        ),
+                        Text(weather.day3_temp_max.round().toString() +
+                            "°C/" +
+                            weather.day3_temp_min.round().toString() +
+                            "°C"),
+                      ],
+                    ),
+                    Divider(color: Colors.black, indent: 16.0, endIndent: 16.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Text("$formattedDate4", style: TextStyle(fontSize: 17)),
+                        SizedBox(
+                          width: 80,
+                        ),
+                        Image.network(
+                            'http://openweathermap.org/img/wn/${weather.day4_icon}@2x.png',
+                            width: 40),
+                        SizedBox(
+                          width: 80,
+                        ),
+                        Text(weather.day4_temp_max.round().toString() +
+                            "°C/" +
+                            weather.day4_temp_min.round().toString() +
+                            "°C"),
+                      ],
+                    ),
+                    Divider(color: Colors.black, indent: 16.0, endIndent: 16.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Text("$formattedDate5", style: TextStyle(fontSize: 17)),
+                        SizedBox(
+                          width: 80,
+                        ),
+                        Image.network(
+                            'http://openweathermap.org/img/wn/${weather.day5_icon}@2x.png',
+                            width: 40),
+                        SizedBox(
+                          width: 80,
+                        ),
+                        Text(weather.day5_temp_max.round().toString() +
+                            "°C/" +
+                            weather.day5_temp_min.round().toString() +
+                            "°C"),
+                      ],
+                    ),
+                    Divider(color: Colors.black, indent: 16.0, endIndent: 16.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Text("$formattedDate6", style: TextStyle(fontSize: 17)),
+                        SizedBox(
+                          width: 80,
+                        ),
+                        Image.network(
+                            'http://openweathermap.org/img/wn/${weather.day6_icon}@2x.png',
+                            width: 40),
+                        SizedBox(
+                          width: 80,
+                        ),
+                        Text(weather.day6_temp_max.round().toString() +
+                            "°C/" +
+                            weather.day6_temp_min.round().toString() +
+                            "°C"),
+                      ],
+                    ),
+                    Divider(color: Colors.black, indent: 16.0, endIndent: 16.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Text("$formattedDate7", style: TextStyle(fontSize: 17)),
+                        SizedBox(
+                          width: 80,
+                        ),
+                        Image.network(
+                            'http://openweathermap.org/img/wn/${weather.day7_icon}@2x.png',
+                            width: 40),
+                        SizedBox(
+                          width: 80,
+                        ),
+                        Text(weather.day7_temp_max.round().toString() +
+                            "°C/" +
+                            weather.day7_temp_min.round().toString() +
+                            "°C"),
+                      ],
+                    ),
+                    Divider(color: Colors.black, indent: 16.0, endIndent: 16.0),
+                  ],
+                )),
+          );
         });
   }
 }
