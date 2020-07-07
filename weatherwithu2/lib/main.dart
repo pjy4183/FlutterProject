@@ -26,14 +26,13 @@ class MyApp extends StatelessWidget {
           //visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         home: Scaffold(
-            resizeToAvoidBottomInset: false,
-            backgroundColor: Colors.grey[900],
-            body: BlocProvider(
-                  builder: (context) => WeatherBloc(WeatherRepo()),
-                  child: SearchPage(),
-                  
-                ),
-            ));
+          resizeToAvoidBottomInset: false,
+          backgroundColor: Colors.grey[900],
+          body: BlocProvider(
+            builder: (context) => WeatherBloc(WeatherRepo()),
+            child: SearchPage(),
+          ),
+        ));
   }
 }
 
@@ -59,14 +58,6 @@ class _SearchPageState extends State<SearchPage> {
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: <Widget>[
-          SnappingSheet(
-                      sheetBelow: SnappingSheetContent(
-                        child: Container(
-                            color: Colors.red,
-                        ),
-                        heightBehavior: SnappingSheetHeight.fit()
-                      ),
-                    ),
           Column(
             //mainAxisAlignment: MainAxisAlignment.center,
             //crossAxisAlignment: CrossAxisAlignment.start,
@@ -88,11 +79,12 @@ class _SearchPageState extends State<SearchPage> {
                               onSubmitted: (String input) {
                                 weatherBloc.add(FetchWeather(input));
                               },
-                              style: TextStyle(color: Colors.white, fontSize: 25),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 25),
                               decoration: InputDecoration(
                                 hintText: 'Search location here....',
-                                hintStyle:
-                                    TextStyle(color: Colors.white, fontSize: 18),
+                                hintStyle: TextStyle(
+                                    color: Colors.white, fontSize: 18),
                                 prefixIcon: Icon(
                                   Icons.search,
                                   color: Colors.white70,
@@ -181,7 +173,6 @@ class _SearchPageState extends State<SearchPage> {
           ),
         ],
       ),
-      
     );
   }
 
@@ -216,14 +207,11 @@ class _SearchPageState extends State<SearchPage> {
             "${place.locality}, ${place.postalCode}, ${place.country}";
       });
       weatherBloc.add(FetchWeather(place.locality));
-      
     } catch (e) {
       print(e);
     }
   }
 }
-
-
 
 class ShowWeather extends StatefulWidget {
   WeatherModel weather;
@@ -241,27 +229,25 @@ class _ShowWeatherState extends State<ShowWeather>
   Animation<double> _arrowIconAnimation;
 
   double _moveAmount = 0.0;
-  
 
   @override
   void initState() {
     super.initState();
-    _arrowIconAnimationController = AnimationController(vsync: this, duration: Duration(seconds: 1));
+    _arrowIconAnimationController =
+        AnimationController(vsync: this, duration: Duration(seconds: 1));
     _arrowIconAnimation = Tween(begin: 0.0, end: 0.2).animate(CurvedAnimation(
-      curve: Curves.elasticOut, 
-      reverseCurve: Curves.elasticIn,
-      parent: _arrowIconAnimationController)
-    );
+        curve: Curves.elasticOut,
+        reverseCurve: Curves.elasticIn,
+        parent: _arrowIconAnimationController));
   }
+
   WeatherModel weather;
   final city;
 
   _ShowWeatherState(this.weather, this.city);
-  
 
   @override
   Widget build(BuildContext context) {
-
     String icon = weather.icon;
     IconData pic = WeatherIcons.day_lightning;
     if (icon == '01d' || icon == '01n') {
@@ -309,76 +295,26 @@ class _ShowWeatherState extends State<ShowWeather>
     if (icon == '50d' || icon == '50n') {
       pic = WeatherIcons.fog;
     }
-    
+
     return Stack(
       children: <Widget>[
-
-        SnappingSheet(
-        sheetAbove: SnappingSheetContent(
-          child: Padding(
-            padding: EdgeInsets.only(bottom: 20.0),
-            child: Align(
-              alignment: Alignment(0.90, 1.0),
-              child: FloatingActionButton(
-                onPressed: () {
-                  if(_controller.snapPositions.last != _controller.currentSnapPosition) {
-                    _controller.snapToPosition(_controller.snapPositions.last);
-                  } 
-                  else {
-                    _controller.snapToPosition(_controller.snapPositions.first);
-                  }
-                },
-                child: RotationTransition(
-                  child: Icon(Icons.arrow_upward),
-                  turns: _arrowIconAnimation,
-                ),
-              ),
-            ),
-          ),
-        ),
-        onSnapEnd: () {
-          if(_controller.snapPositions.last != _controller.currentSnapPosition) {
-            _arrowIconAnimationController.reverse();
-          }
-          else {
-            _arrowIconAnimationController.forward();
-          }
-        },
-        onMove: (moveAmount) {
-          setState(() {
-            _moveAmount = moveAmount;
-          });
-        },
-        snappingSheetController: _controller,
-        snapPositions: const [
-          SnapPosition(positionPixel: 0.0, snappingCurve: Curves.elasticOut, snappingDuration: Duration(milliseconds: 750)),
-          SnapPosition(positionFactor: 0.4),
-          SnapPosition(positionFactor: 0.8),
-        ],
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Moved ${_moveAmount.round()} pixels',
-              style: TextStyle(fontSize: 20.0),
-            ),
-          ],
-        ),
-        grabbingHeight: MediaQuery.of(context).padding.bottom + 50,
-        grabbing: GrabSection(),
-        sheetBelow: SnappingSheetContent(
-          child: SheetContent()
-        ),
-      ),
+        //SnappingSheet(
+        //sheetBelow: SnappingSheetContent(
+        //child: Container(
+        //   color: Colors.red,
+        //  ),
+        //   heightBehavior: SnappingSheetHeight.fit()
+        //    ),
+        // ),
 
         Container(
             // decoration: BoxDecoration(
             //     image: DecorationImage(
-            //         image: AssetImage("images/$icon.png"), 
+            //         image: AssetImage("images/$icon.png"),
             //         fit: BoxFit.fitWidth,
             //         alignment: Alignment.center,
             //       ),
-                  
+
             //       shape: BoxShape.circle,
             //     ),
             padding: EdgeInsets.only(right: 32, left: 32, top: 10),
@@ -428,7 +364,7 @@ class _ShowWeatherState extends State<ShowWeather>
                   style: TextStyle(color: Colors.white70, fontSize: 14),
                 ),
                 SizedBox(
-                  height: 30,
+                  height: 20,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -466,7 +402,8 @@ class _ShowWeatherState extends State<ShowWeather>
                           ),
                           Text(
                             "Humidity",
-                            style: TextStyle(color: Colors.white70, fontSize: 12),
+                            style:
+                                TextStyle(color: Colors.white70, fontSize: 12),
                           ),
                         ],
                       ),
@@ -520,7 +457,8 @@ class _ShowWeatherState extends State<ShowWeather>
                           ),
                           Text(
                             "Wind Speed",
-                            style: TextStyle(color: Colors.white70, fontSize: 12),
+                            style:
+                                TextStyle(color: Colors.white70, fontSize: 12),
                           ),
                         ],
                       ),
@@ -558,83 +496,112 @@ class _ShowWeatherState extends State<ShowWeather>
                           ),
                           Text(
                             "Feels Like",
-                            style: TextStyle(color: Colors.white70, fontSize: 12),
+                            style:
+                                TextStyle(color: Colors.white70, fontSize: 12),
                           ),
                         ],
                       ),
                     ),
                   ],
                 ),
-
+                IconButton(
+                    icon: Icon(
+                      Icons.settings,
+                      color: Colors.white,
+                      size: 30,
+                    ),
+                    padding: const EdgeInsets.only(right: 15),
+                    onPressed: () {
+                      _bottomSheet(context);
+                    }),
               ],
             )),
       ],
     );
   }
-}
 
-
-class SheetContent extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: ListView.builder(
-        padding: EdgeInsets.all(20.0),
-        itemCount: 7,
-        itemBuilder: (context, index) {
+  void _bottomSheet(BuildContext context) {
+    final now = DateTime.now();
+    var tomorrow = DateTime(now.year, now.month, now.day + 1);
+    var formattedDate = "${tomorrow.month}/${tomorrow.day}";
+    var tomorrow2 = DateTime(now.year, now.month, now.day + 2);
+    var formattedDate2 = "${tomorrow2.month}/${tomorrow2.day}";
+    var tomorrow3 = DateTime(now.year, now.month, now.day + 3);
+    var formattedDate3 = "${tomorrow3.month}/${tomorrow3.day}";
+    var tomorrow4 = DateTime(now.year, now.month, now.day + 4);
+    var formattedDate4 = "${tomorrow4.month}/${tomorrow4.day}";
+    var tomorrow5 = DateTime(now.year, now.month, now.day + 5);
+    var formattedDate5 = "${tomorrow5.month}/${tomorrow5.day}";
+    var tomorrow6 = DateTime(now.year, now.month, now.day + 6);
+    var formattedDate6 = "${tomorrow6.month}/${tomorrow6.day}";
+    var tomorrow7 = DateTime(now.year, now.month, now.day + 7);
+    var formattedDate7 = "${tomorrow7.month}/${tomorrow7.day}";
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
           return Container(
-            decoration: BoxDecoration(
-              border: Border(bottom: BorderSide(color: Colors.grey[300], width: 1.0))
-            ),
-            child: ListTile(
-              leading: Icon(Icons.info),
-              title: Text('List item $index'),
-            ),
-          );
-        },
-      ),
-    );
+              height: MediaQuery.of(context).size.height * .80,
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Text("$formattedDate"),
+                      Image.network('http://openweathermap.org/img/wn/${weather.day1_icon}@2x.png',width: 40,),
+                      Text(weather.day1_temp_max.round().toString() + "°C/" + weather.day1_temp_min.round().toString() +"°C"),
+                    ],
+                  ),
+                  Divider(color: Colors.black),
+                  Row(
+                    children: <Widget>[
+                      Text("$formattedDate2"),
+                      Image.network('http://openweathermap.org/img/wn/${weather.day2_icon}@2x.png',width: 40),
+                      Text(weather.day2_temp_max.round().toString() + "°C/" + weather.day2_temp_min.round().toString() +"°C"),
+                    ],
+                  ),
+                  Divider(color: Colors.black),
+                  Row(
+                    children: <Widget>[
+                      Text("$formattedDate3"),
+                      Image.network('http://openweathermap.org/img/wn/${weather.day3_icon}@2x.png',width: 40),
+                      Text(weather.day3_temp_max.round().toString() + "°C/" + weather.day3_temp_min.round().toString() +"°C"),
+                    ],
+                  ),
+                  Divider(color: Colors.black),
+                  Row(
+                    children: <Widget>[
+                      Text("$formattedDate4"),
+                      Image.network('http://openweathermap.org/img/wn/${weather.day4_icon}@2x.png',width: 40),
+                      Text(weather.day4_temp_max.round().toString() + "°C/" + weather.day4_temp_min.round().toString() +"°C"),
+                    ],
+                  ),
+                  Divider(color: Colors.black),
+                  Row(
+                    children: <Widget>[
+                      Text("$formattedDate5"),
+                      Image.network('http://openweathermap.org/img/wn/${weather.day5_icon}@2x.png',width: 40),
+                      Text(weather.day5_temp_max.round().toString() + "°C/" + weather.day5_temp_min.round().toString() +"°C"),
+                    ],
+                  ),
+                  Divider(color: Colors.black),
+                  Row(
+                    children: <Widget>[
+                      Text("$formattedDate6"),
+                      Image.network('http://openweathermap.org/img/wn/${weather.day6_icon}@2x.png',width: 40),
+                      Text(weather.day6_temp_max.round().toString() + "°C/" + weather.day6_temp_min.round().toString() +"°C"),
+                    ],
+                  ),
+                  Divider(color: Colors.black),
+                  Row(
+                    children: <Widget>[
+                      Text("$formattedDate7"),
+                      Image.network('http://openweathermap.org/img/wn/${weather.day7_icon}@2x.png',width: 40),
+                      Text(weather.day7_temp_max.round().toString() + "°C/" + weather.day7_temp_min.round().toString() +"°C"),
+                    ],
+                  ),
+                  Divider(color: Colors.black),
+                ],
+              )
+            );
+        });
   }
 }
-
-
-class GrabSection extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [BoxShadow(
-          blurRadius: 20.0,
-          color: Colors.black.withOpacity(0.2),
-        )],
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(30.0),
-          topRight: Radius.circular(30.0),
-        ),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Container(
-            width: 100.0,
-            height: 10.0,
-            margin: EdgeInsets.only(top: 15.0),
-            decoration: BoxDecoration(
-              color: Colors.grey[300],
-              borderRadius: BorderRadius.all(Radius.circular(5.0))
-            ),
-          ),
-          Container(
-            height: 2.0,
-            margin: EdgeInsets.only(left: 20, right: 20),
-            color: Colors.grey[300],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-
